@@ -17,10 +17,17 @@ db.once('open', function (callback) {
 	payload: {
 		participants_text: String, 
 		tick_mac: String, 
-		now_str: String
+		now_str: String,
+		seconds_left: String
 	}
   });
   Message = mongoose.model('Message', messageSchema);
+
+  Message.find(function (err, messages) {
+  	if (err) return console.error(err);
+  	console.log(messages)
+  });
+	
 
 });
 
@@ -31,7 +38,7 @@ ws.on('message', function(message) {
 	if ( lastMessage != null ) {
 		if ( lastMessage.payload.seconds_left < message.payload.seconds_left ) {
 			console.log(lastMessage);
-			var m = Message(message);
+			var m = Message(lastMessage);
 			m.save(function(err,m) {
 				if(err)return console.error(err);
 			});
